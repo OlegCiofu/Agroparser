@@ -24,7 +24,7 @@ namespace AgroParser
             {
                 string categoryName = item.TextContent; //получаем Название рубрики из вытащенного элемента
                 await PutToDataBase(categoryName); //асинхронно отправляем вытащенное название рубрики в БД
-                list.Add($"ParentId = 0; Category = {categoryName}; HREF = 0"); //Отправляем вытащенное имя в список, который выведем пользователю на экран
+                list.Add($"Category = {categoryName}"); //Отправляем вытащенное имя в список, который выведем пользователю на экран
             }
             return list.ToArray();
         }
