@@ -16,7 +16,6 @@ namespace AgroParser
 
         public async Task<string[]> Parse(IHtmlDocument document, int categoryId)
         {
-
             var list = new List<string>();
             var items = document.QuerySelectorAll("div").Where(item => item.Id == "incontent"); //Условие для вытаскивания главной рубрики
 
@@ -329,7 +328,7 @@ namespace AgroParser
                 //Отправляем в БД пропарсенные значения
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = $"INSERT INTO contact (companyId, contactType, personName, personPost) VALUES ('{companyId}', '{contactType}', '{personName}', {personPost})";
+                command.CommandText = $"INSERT INTO contact (companyId, contactType, personName, personPost) VALUES ('{companyId}', '{contactType}', '{personName}', '{personPost}')";
                 command.ExecuteNonQuery();
                 //Проверяем, успешно ли данные легли в БД
                 command.CommandText = $"SELECT * FROM contact WHERE companyId = '{companyId}'";

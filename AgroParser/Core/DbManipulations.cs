@@ -12,7 +12,6 @@ namespace AgroParser.Core
     {
         Visual msg = new Visual();
         
-
         private string createDBcommand = "CREATE DATABASE parserDB ON PRIMARY " +
                 "(NAME = parserDB, " +
                 $"FILENAME = '{System.Windows.Forms.Application.StartupPath}\\Database.mdf', " + //C:\\Agroparser\\
@@ -67,11 +66,7 @@ namespace AgroParser.Core
 
         private string dropDataBaseCommand = "ALTER DATABASE parserDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;" +
                                              "DROP DATABASE parserDB;";
-
-
-
-
-
+        
         public void CreateDB()
         {
             string connectionString = @"Data Source=.;Integrated security=True;database=master";
@@ -140,7 +135,6 @@ namespace AgroParser.Core
                 command.CommandText = dropDataBaseCommand;
                 command.ExecuteNonQuery();
                 msg.Message("DataBase is Deleted Successfully");
-
             }
             catch (System.Exception ex)
             {
@@ -166,10 +160,6 @@ namespace AgroParser.Core
                 command.Connection = connection;
                 command.CommandText = $"SELECT MAX(id) FROM {table}";
                 count = Convert.ToInt32(command.ExecuteScalar());
-                //while (reader.Read())
-                //{
-                //    count = Convert.ToInt32(reader["id"]);
-                //}
                 Console.WriteLine($"Max count from table {table} in row id = {count}");
                 connection.Close();
             }
@@ -228,34 +218,5 @@ namespace AgroParser.Core
             }
             return categoryId;
         }
-
-
-
-
-        //public static async Task PutToDataBase(string oneValue, string TSQLTextWrite, string TSQLTextRead)
-        //{
-        //    string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
-        //    using (SqlConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        //асинхронно открываем коннект
-        //        await connection.OpenAsync();
-        //        //Отправляем в БД пропарсенные значения
-        //        SqlCommand command = new SqlCommand();
-        //        command.Connection = connection;
-        //        command.CommandText = $"INSERT INTO category (parentId, categoryName, link) VALUES ('0', '{oneValue}', '0')";
-        //        command.ExecuteNonQuery();
-        //        //Проверяем, успешно ли данные легли в БД
-        //        command.CommandText = $"SELECT * FROM category WHERE categoryName = '{oneValue}'";
-        //        SqlDataReader reader = command.ExecuteReader();
-        //        while (reader.Read())
-        //        {
-        //            if (reader[oneValue].ToString() == oneValue)
-        //                Console.WriteLine($"INSERT INTO category (categoryName) VALUE {oneValue} was DONE...");
-        //            else
-        //                Console.WriteLine($"INSERT INTO category (categoryName) VALUE {oneValue} was NOT DONE! ERROR!!!");
-        //        }
-        //        connection.Close();
-        //    }
-        //}
     }
 }

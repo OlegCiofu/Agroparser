@@ -34,29 +34,29 @@ namespace AgroParser
             DoubleBuffered = true;
         }
 
-        public void AnimateImage()
-        {
-            if (!isActive)
-            {
-                ImageAnimator.Animate(animatedImage, new EventHandler(OnFramesChanged));
-            }
-        }
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            //Begin the animation.
-            AnimateImage();
+        //public void AnimateImage()
+        //{
+        //    if (!isActive)
+        //    {
+        //        ImageAnimator.Animate(animatedImage, new EventHandler(OnFramesChanged));
+        //    }
+        //}
+        //protected override void OnPaint(PaintEventArgs e)
+        //{
+        //    //Begin the animation.
+        //    AnimateImage();
 
-            //Get the next frame ready for rendering.
-            ImageAnimator.UpdateFrames();
+        //    //Get the next frame ready for rendering.
+        //    ImageAnimator.UpdateFrames();
 
-            //Draw the next frame in the animation.
-            e.Graphics.DrawImage(animatedImage, new Point(12, 242));
-        }
+        //    //Draw the next frame in the animation.
+        //    e.Graphics.DrawImage(animatedImage, new Point(12, 242));
+        //}
 
-        private void OnFramesChanged(object sender, EventArgs e)
-        {
-            Invalidate();
-        }
+        //private void OnFramesChanged(object sender, EventArgs e)
+        //{
+        //    Invalidate();
+        //}
 
         public void Message(string info)
         {
