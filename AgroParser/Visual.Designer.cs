@@ -137,7 +137,7 @@
             this.abortButton.Name = "abortButton";
             this.abortButton.Size = new System.Drawing.Size(141, 41);
             this.abortButton.TabIndex = 9;
-            this.abortButton.Text = "STOP This Shit!";
+            this.abortButton.Text = "STOP!";
             this.abortButton.UseVisualStyleBackColor = true;
             this.abortButton.Click += new System.EventHandler(this.abortButton_Click);
             // 

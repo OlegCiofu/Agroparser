@@ -47,9 +47,9 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if (reader["categoryName"].ToString() == categoryName)
-                        Console.WriteLine($"INSERT INTO category (categoryName) VALUE {categoryName} was DONE...");
+                        Console.WriteLine($"Success! CategoryName {categoryName} was inserted in database");
                     else
-                        Console.WriteLine($"INSERT INTO category (categoryName) VALUE {categoryName} was NOT DONE! ERROR!!!");
+                        Console.WriteLine($"Error! CategoryName {categoryName} was not inserted in database");
                 }
                 connection.Close();
             }

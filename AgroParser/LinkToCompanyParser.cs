@@ -17,8 +17,6 @@ namespace AgroParser
             var list = new List<string>();
             var items = document.QuerySelectorAll("a").Where(item => item.ParentElement.ClassName == "comp-tit");//вытаскиваем элемент с ссылкой на компанию
             string linkTo = null;
-            //int category = GetCategory();
-            //Console.WriteLine($"Контрольная точка. Вот этак категория, что отправляем в базу! |{category}|");
             foreach (var item in items)
             {
                 linkTo = item.GetAttribute("href");//вытаскиваем ссылку из элемента
@@ -49,11 +47,10 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if (reader["link"].ToString() == compLink)
-                        Console.WriteLine($"INSERT INTO temp (link) VALUE {compLink} was DONE...");
+                        Console.WriteLine($"Success! Link {compLink} was inserted in database");
                     else
-                        Console.WriteLine($"INSERT INTO temp (link) VALUE {compLink} NOT DONE! ERROR!!!");
+                        Console.WriteLine($"Error! Link {compLink} was not inserted in database");
                 }
-                //Закрываем коннект с БД
                 connection.Close();
             }
         }

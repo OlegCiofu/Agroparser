@@ -44,6 +44,7 @@ namespace AgroParser
                 string mainPhone = "";
                 int contactId = 0;
                 string leftpad = "";
+                string post = "0";
                 for (int i = 1; i <= countFags; i++)
                 {
                     string mainPersonWithPhone = mainPersonAll;
@@ -80,7 +81,7 @@ namespace AgroParser
                     if (personExist == false)
                     {
                         list.Add($"{probel.PadLeft(15)}| {mainPerson}\t | {mainPhone}");
-                        contactId = await PutContactToDb(companyId, mainContactType, mainPerson);
+                        contactId = await PutContactToDb(companyId, mainContactType, mainPerson, post);
                         leftpad = mainPerson;
                     }
                     else
@@ -98,12 +99,6 @@ namespace AgroParser
                 {
                     list.Add(line);
                 }
-
-
-
-
-
-
                 Console.WriteLine($"Пропарсили |{categoryID} | {companyName} | {region} | {address} \n");
             }
             
@@ -178,7 +173,7 @@ namespace AgroParser
             }
             return answer;
         }
-///
+
         async Task<List<string>> ParseSubWorkers(string allHtml, int companyId)
         {
             var list = new List<string>();
@@ -209,17 +204,14 @@ namespace AgroParser
                 bool mailExistsinDb = await FindMailInDb(mail);
                 if (mailExistsinDb == true)
                     mail = "0";
-                int contactId = await PutContactToDb(companyId, mainRubric, name);
+                int contactId = await PutContactToDb(companyId, mainRubric, name, post);
                 await PutPhoneToDb(contactId, phone, fax, mail);
 
                 list.Add($"-----{mainRubric} | {post} | {name} | {phone}/{ fax} | {mail}");
             }
-            
-
             return list;
         }
-
-
+        
         async Task<string> ParseSlavePhone(string allOuterHtml)
         {
             string answer = "";
@@ -283,37 +275,11 @@ namespace AgroParser
                 answer = "0";
             return answer;
         }
-        ///
+
         #endregion
 
         #region DB
-
-        //private static async Task PutToDataBase(string categoryName)
-        //{
-        //    string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
-        //    using (SqlConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        //асинхронно открываем коннект
-        //        await connection.OpenAsync();
-        //        //Отправляем в БД пропарсенные значения
-        //        SqlCommand command = new SqlCommand();
-        //        command.Connection = connection;
-        //        command.CommandText = $"INSERT INTO temp2 (link) VALUES ('{categoryName}')";
-        //        command.ExecuteNonQuery();
-        //        //Проверяем, успешно ли данные легли в БД
-        //        command.CommandText = $"SELECT * FROM temp2 WHERE tempo = '{categoryName}'";
-        //        SqlDataReader reader = command.ExecuteReader();
-        //        while (reader.Read())
-        //        {
-        //            if (reader["link"].ToString() == categoryName)
-        //                Console.WriteLine($"!!!!!!!!!!INSERT INTO category (categoryName) VALUE {categoryName} was DONE...");
-        //            else
-        //                Console.WriteLine($"--------------INSERT INTO category (categoryName) VALUE {categoryName} was NOT DONE! ERROR!!!");
-        //        }
-        //        connection.Close();
-        //    }
-        //}
-
+        
         private static async Task<int> PutCompToDb(int categoryId, string name, string region, string address)
         {
             int id = 0;
@@ -327,9 +293,6 @@ namespace AgroParser
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
                 command.CommandText = $"INSERT INTO company (categoryId, name, region, address) VALUES ('{categoryId}', '{name}', '{region}', '{address}')";
-                
-
-
                 command.ExecuteNonQuery();
                 //Проверяем, успешно ли данные легли в БД
                 command.CommandText = $"SELECT * FROM company WHERE name = '{name}'";
@@ -338,25 +301,24 @@ namespace AgroParser
                 {
                     if ((reader["categoryId"].ToString() == categoryId.ToString()) && (reader["region"].ToString() == region) && (reader["address"].ToString() == address))
                     {
-                        Console.WriteLine($"Company {name} was inserted in database SUCCESFULLY");
+                        Console.WriteLine($"Success! Company {name} was inserted in database");
                         id = Convert.ToInt32(reader["id"].ToString());
                     }
                     else
                     {
-                        Console.WriteLine($"ERROR!!! Company {name} was not inserted in database!!!\n" +
+                        Console.WriteLine($"Error!!! Company {name} was not inserted in database!!!\n" +
                             $"{reader["categoryId"].ToString()} == {categoryId}???" +
                             $"{reader["region"].ToString()} == {region}???" +
                             $"{reader["address"].ToString()} == {address}???");
                         id = Convert.ToInt32(reader["id"].ToString());
                     }
-
-                    }
+                }
                 connection.Close();
             }
             return id;
         }
 
-        private static async Task<int> PutContactToDb(int companyId, string contactType, string personName)
+        private static async Task<int> PutContactToDb(int companyId, string contactType, string personName, string personPost)
         {
             int contactId = 0;
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
@@ -367,7 +329,7 @@ namespace AgroParser
                 //Отправляем в БД пропарсенные значения
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = $"INSERT INTO contact (companyId, contactType, personName) VALUES ('{companyId}', '{contactType}', '{personName}')";
+                command.CommandText = $"INSERT INTO contact (companyId, contactType, personName, personPost) VALUES ('{companyId}', '{contactType}', '{personName}', {personPost})";
                 command.ExecuteNonQuery();
                 //Проверяем, успешно ли данные легли в БД
                 command.CommandText = $"SELECT * FROM contact WHERE companyId = '{companyId}'";
@@ -376,11 +338,11 @@ namespace AgroParser
                 {
                     if ((reader["contactType"].ToString() == contactType) && (reader["personName"].ToString() == personName))
                     {
-                        Console.WriteLine($"Person {personName} was inserted in database SUCCESFULLY");
+                        Console.WriteLine($"Success! Person {personName} was inserted in database");
                         contactId = Convert.ToInt32(reader["id"].ToString());
                     }
                     else
-                        Console.WriteLine($"Person {personName} was not inserted in database!!!  ERROR!!!");
+                        Console.WriteLine($"Error! Person {personName} was not inserted in database");
                 }
                 connection.Close();
             }
@@ -406,10 +368,10 @@ namespace AgroParser
                 {
                     if ((reader["phone"].ToString() == phone) && (reader["fax"].ToString() == fax) && (reader["email"].ToString() == email))
                     {
-                        Console.WriteLine($"Phone {phone} was inserted in database SUCCESFULLY");
+                        Console.WriteLine($"Success! Phone {phone} was inserted in database");
                     }
                     else
-                        Console.WriteLine($"Phone {phone} was not inserted in database!!!  ERROR!!!");
+                        Console.WriteLine($"Error! Phone {phone} was not inserted in database");
                 }
                 connection.Close();
             }
@@ -428,7 +390,6 @@ namespace AgroParser
                 SqlDataReader reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
-                    // link = reader["link"].ToString();
                     if (reader["personName"].ToString() == name)
                     {
                         answer = true;
@@ -458,7 +419,6 @@ namespace AgroParser
                 SqlDataReader reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
-                    // link = reader["link"].ToString();
                     if (reader["phone"].ToString() == phone)
                     {
                         answer = true;
@@ -488,7 +448,6 @@ namespace AgroParser
                 SqlDataReader reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
-                    // link = reader["link"].ToString();
                     if (reader["email"].ToString() == email)
                     {
                         answer = true;
@@ -504,43 +463,15 @@ namespace AgroParser
             }
             return answer;
         }
-
-
         #endregion
-
-        //public async Task<string> Co(string source)
-        //{
-        //    byte[] bytes = null;
-        //    string recodedResponse = null;
-        //    bytes = await source.//ReadAsByteArrayAsync();
-        //    Encoding encoding = Encoding.GetEncoding("UTF-16");
-        //    recodedResponse = encoding.GetString(bytes, 0, bytes.Length);
-        //    return recodedResponse;
-
-        //}
-
-        //async static Task<string> DecodeFromUtf8(string utf8String)
-        //{
-        //    // copy the string as UTF-8 bytes.
-        //    byte[] utf8Bytes = new byte[utf8String.Length];
-        //    for (int i = 0; i < utf8String.Length; ++i)
-        //    {
-        //        //Debug.Assert( 0 <= utf8String[i] && utf8String[i] <= 255, "the char must be in byte's range");
-        //        utf8Bytes[i] = (byte)utf8String[i];
-        //    }
-
-        //    return Encoding.UTF8.GetString(utf8Bytes, 0, utf8Bytes.Length);
-        //}
-
     }
+
     static class RemoveD
     {
-
         public static string RemoveDiacritics(this string text)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return text;
-
             text = text.Normalize(NormalizationForm.FormD);
             var chars = text.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).ToArray();
             return new string(chars).Normalize(NormalizationForm.FormC);

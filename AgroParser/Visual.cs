@@ -32,16 +32,12 @@ namespace AgroParser
             OnNewData += Parser_WhenNewData;
             OnCompleted += Parser_WhenCompleted;
             DoubleBuffered = true;
-
-
         }
 
         public void AnimateImage()
         {
             if (!isActive)
             {
-
-                //Begin the animation only once.
                 ImageAnimator.Animate(animatedImage, new EventHandler(OnFramesChanged));
             }
         }
@@ -109,9 +105,6 @@ namespace AgroParser
             OnNewData?.Invoke(this, result);
             OnNewData?.Invoke(this, subresult);
             OnCompleted?.Invoke(this);
-
-            //  ListBox.Items.AddRange(result);
-            //   ListBox.Items.AddRange(subresult);
             isActive = false;
         }
 
@@ -161,13 +154,10 @@ namespace AgroParser
                     }
                 }
             }
-            
             OnCompleted?.Invoke(this);
             isActive = false;
         }
-
-
-
+        
         private async void DetailCompWorker()
         {
             database = new DbManipulations();
@@ -194,16 +184,12 @@ namespace AgroParser
             OnCompleted?.Invoke(this);
             isActive = false;
         }
-
-
-
-
+        
         private  void parseCategoriesButton_Click(object sender, EventArgs e)
         {
             string link = "https://agrotender.com.ua/kompanii/region_ukraine/t10.html";
             isActive = true;
             Worker(link);
-          //  Message("All Category name are collected!");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -215,14 +201,13 @@ namespace AgroParser
         private void abortButton_Click(object sender, EventArgs e)
         {
             isActive = false;
-            Message("Shit is stoped!");
+            Message("Parsing aborted!");
         }
 
         private void ParseCompanyesButton_Click(object sender, EventArgs e)
         {
             isActive = true;
             DetailCompWorker();
-            
         }
     }
 }
