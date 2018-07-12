@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AgroParser
@@ -63,12 +62,13 @@ namespace AgroParser
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error" + ex);
+                Console.WriteLine("Error adding category to dictionary" + ex);
             }
         }
 
         private static async Task PutToDataBase(string parentId, string categoryName, string categoryLink)
         {
+            bool check = false;
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -83,12 +83,14 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if ((reader["parentId"].ToString() == parentId) && (reader["categoryName"].ToString() == categoryName) && (reader["link"].ToString() == categoryLink))
-                        Console.WriteLine($"INSERT INTO category (parentId, categoryName, categoryLink) VALUES ('{parentId}', '{categoryName}', '{categoryLink}' SUCCESS...");
-                    else
-                        Console.WriteLine($"ERROR!!! INSERT INTO category (parentId, categoryName, link) VALUES ('{parentId}', '{categoryName}', '{categoryLink}' with ERROR!");
+                        check = true;
                 }
                 connection.Close();
             }
+            if (check)
+                Console.WriteLine($"Success! parentId: {parentId}, categoryName: {categoryName}, link: {categoryLink} was iserted in database");
+            else
+                Console.WriteLine($"Error! parentId: {parentId}, categoryName: {categoryName}, link: {categoryLink} was not iserted in database");
         }
 
         string FindCatInDic(string category)

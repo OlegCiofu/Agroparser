@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 using AngleSharp.Dom.Html;
@@ -31,6 +29,7 @@ namespace AgroParser
 
         private static async Task PutToDataBase(string categoryName)
         {
+            bool check = false;
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -47,12 +46,14 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if (reader["categoryName"].ToString() == categoryName)
-                        Console.WriteLine($"Success! CategoryName {categoryName} was inserted in database");
-                    else
-                        Console.WriteLine($"Error! CategoryName {categoryName} was not inserted in database");
+                        check = true;
                 }
                 connection.Close();
             }
+            if (check)
+                Console.WriteLine($"Success! CategoryName {categoryName} was inserted in database");
+            else
+                Console.WriteLine($"Error! CategoryName {categoryName} was not inserted in database");
         }
     }
 }

@@ -281,6 +281,7 @@ namespace AgroParser
         
         private static async Task<int> PutCompToDb(int categoryId, string name, string region, string address)
         {
+            bool check=false;
             int id = 0;
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
             address = RemoveD.RemoveDiacritics(address);
@@ -300,25 +301,23 @@ namespace AgroParser
                 {
                     if ((reader["categoryId"].ToString() == categoryId.ToString()) && (reader["region"].ToString() == region) && (reader["address"].ToString() == address))
                     {
-                        Console.WriteLine($"Success! Company {name} was inserted in database");
-                        id = Convert.ToInt32(reader["id"].ToString());
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Error!!! Company {name} was not inserted in database!!!\n" +
-                            $"{reader["categoryId"].ToString()} == {categoryId}???" +
-                            $"{reader["region"].ToString()} == {region}???" +
-                            $"{reader["address"].ToString()} == {address}???");
+                        check = true;
                         id = Convert.ToInt32(reader["id"].ToString());
                     }
                 }
                 connection.Close();
             }
+            if (check)
+                Console.WriteLine($"Success! Company {name} was inserted in database");
+            else
+                Console.WriteLine($"Error!!! Company {name} was not inserted in database!!!\n");
+
             return id;
         }
 
         private static async Task<int> PutContactToDb(int companyId, string contactType, string personName, string personPost)
         {
+            bool check = false;
             int contactId = 0;
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -337,19 +336,23 @@ namespace AgroParser
                 {
                     if ((reader["contactType"].ToString() == contactType) && (reader["personName"].ToString() == personName))
                     {
-                        Console.WriteLine($"Success! Person {personName} was inserted in database");
+                        check = true;
                         contactId = Convert.ToInt32(reader["id"].ToString());
                     }
-                    else
-                        Console.WriteLine($"Error! Person {personName} was not inserted in database");
                 }
                 connection.Close();
             }
+            if(check)
+                Console.WriteLine($"Success! Person {personName} was inserted in database");
+            else
+                Console.WriteLine($"Error! Person {personName} was not inserted in database");
+
             return contactId;
         }
 
         private static async Task PutPhoneToDb(int contactId, string phone, string fax, string email)
         {
+            bool check = false;
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -366,14 +369,14 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if ((reader["phone"].ToString() == phone) && (reader["fax"].ToString() == fax) && (reader["email"].ToString() == email))
-                    {
-                        Console.WriteLine($"Success! Phone {phone} was inserted in database");
-                    }
-                    else
-                        Console.WriteLine($"Error! Phone {phone} was not inserted in database");
+                        check = true;
                 }
                 connection.Close();
             }
+            if(check)
+                Console.WriteLine($"Success! Phone {phone} was inserted in database");
+            else
+                Console.WriteLine($"Error! Phone {phone} was not inserted in database");
         }
 
         public async Task<bool> FindPersonInDb(int id, string name)
@@ -390,18 +393,15 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if (reader["personName"].ToString() == name)
-                    {
                         answer = true;
-                        Console.WriteLine($"Verifying if person exist in DB. Person {name} exists in DB");
-                    }
-                    else
-                    {
-                        answer = false;
-                        Console.WriteLine($"Verifying if person exist in DB. Person {name} doesn't exists in DB");
-                    }
                 }
                 connection.Close();
             }
+            if (answer)
+                Console.WriteLine($"Verifying if person exist in DB. Person {name} exists in DB");
+            else
+                Console.WriteLine($"Verifying if person exist in DB. Person {name} doesn't exists in DB");
+
             return answer;
         }
 
@@ -419,18 +419,14 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if (reader["phone"].ToString() == phone)
-                    {
                         answer = true;
-                        Console.WriteLine($"Verifying if phone exist in DB. Phone {phone} exists in DB");
-                    }
-                    else
-                    {
-                        answer = false;
-                        Console.WriteLine($"Verifying if phone exist in DB. Phone {phone} doesn't exists in DB");
-                    }
                 }
                 connection.Close();
             }
+            if (answer)
+                Console.WriteLine($"Verifying if phone exist in DB. Phone {phone} exists in DB");
+            else
+                Console.WriteLine($"Verifying if phone exist in DB. Phone {phone} doesn't exists in DB");
             return answer;
         }
 
@@ -448,18 +444,14 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if (reader["email"].ToString() == email)
-                    {
                         answer = true;
-                        Console.WriteLine($"Verifying if email exist in DB. Email {email} exists in DB");
-                    }
-                    else
-                    {
-                        answer = false;
-                        Console.WriteLine($"Verifying if email exist in DB. Email {email} doesn't exists in DB");
-                    }
                 }
                 connection.Close();
             }
+            if(answer)
+                Console.WriteLine($"Verifying if email exist in DB. Email {email} exists in DB");
+            else
+                Console.WriteLine($"Verifying if email exist in DB. Email {email} doesn't exists in DB");
             return answer;
         }
         #endregion

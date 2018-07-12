@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AgroParser.Core
@@ -11,7 +8,9 @@ namespace AgroParser.Core
     class DbManipulations
     {
         Visual msg = new Visual();
-        
+
+        #region DatabaseCreateDelete
+
         private string createDBcommand = "CREATE DATABASE parserDB ON PRIMARY " +
                 "(NAME = parserDB, " +
                 $"FILENAME = '{System.Windows.Forms.Application.StartupPath}\\Database.mdf', " + //C:\\Agroparser\\
@@ -69,46 +68,40 @@ namespace AgroParser.Core
         
         public void CreateDB()
         {
-            string connectionString = @"Data Source=.;Integrated security=True;database=master";
-            SqlConnection connection = new SqlConnection(connectionString);
-            try
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = createDBcommand;
-                command.ExecuteNonQuery();
-                msg.Message("DataBase is Created Successfully");
-                command.CommandText = createDBTables;
-                command.ExecuteNonQuery();
-                msg.Message("All Tables was Created Successfully");
-
-            }
-            catch (System.Exception ex)
-            {
-                msg.Message(ex.ToString());
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-            }
+            string command = createDBcommand;
+            string message = "All Data from DB Deleted Successfully";
+            DoWithDatabase(command, message);
+            command = createDBTables;
+            message = "All Tables was Created Successfully";
+            DoWithDatabase(command, message);
         }
 
         public void EraseData()
         {
-            string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
+            string command = deleteDataCommand;
+            string message = "All Data from DB Deleted Successfully";
+            DoWithDatabase(command, message);
+        }
+
+        public void DropDB()
+        {
+            string command = dropDataBaseCommand;
+            string message = "DataBase is Deleted Successfully";
+            DoWithDatabase(command, message);
+        }
+
+        private void DoWithDatabase(string comnd, string mesg)
+        {
+            string connectionString = @"Data Source=.;Integrated security=True;database=master";
             SqlConnection connection = new SqlConnection(connectionString);
             try
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
-                command.CommandText = deleteDataCommand;
+                command.CommandText = comnd;
                 command.ExecuteNonQuery();
-                msg.Message("All Data from DB Deleted Successfully");
+                msg.Message(mesg);
             }
             catch (System.Exception ex)
             {
@@ -123,31 +116,7 @@ namespace AgroParser.Core
             }
         }
 
-        public void DropDB()
-        {
-            string connectionString = @"Data Source=.;Integrated security=True;database=master";
-            SqlConnection connection = new SqlConnection(connectionString);
-            try
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = dropDataBaseCommand;
-                command.ExecuteNonQuery();
-                msg.Message("DataBase is Deleted Successfully");
-            }
-            catch (System.Exception ex)
-            {
-                msg.Message(ex.ToString());
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-            }
-        }
+        #endregion
 
         public async Task<int> GetMaxCountDB(string table)
         {
@@ -166,9 +135,10 @@ namespace AgroParser.Core
             return count;
         }
 
-        public async Task<string> GetLinkByKey(int id, string sourceTable)
+        public async Task<(string link, int categoryId)> GetLinkAndIdByKey(int id, string sourceTable)
         {
-            string link = "";
+            var answer = (link: "0", categoryId: 0);
+            
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -181,42 +151,23 @@ namespace AgroParser.Core
                 {
                     if (reader["id"].ToString() == id.ToString())
                     {
-                        link = reader["link"].ToString();
-                        Console.WriteLine($"We have found that id = {id}, is key to link = {link}");
+                        answer.link = reader["link"].ToString();
+                        try
+                        {
+                            answer.categoryId = Convert.ToInt32(reader["categoryId"]);
+                        }
+                        catch {}
                     }
-                    else
-                        Console.WriteLine($"ERROR!!! We didn't found value to key {id}");
                 }
                 connection.Close();
+                if (answer.link == "" || answer.link == null)
+                    Console.WriteLine($"Error!!! We didn't found value to key {id}");
+                else if (answer.link == "0")
+                    Console.WriteLine($"id: {id} is a key to main category with no link. All is Ok, doing next step");
+                else
+                    Console.WriteLine($"Success! We have found that id: {id}, is key to link: {answer.link} and key to categoryID = {answer.categoryId}");
             }
-            return link;
-        }
-
-        public async Task<int> GetIdByKey(int id)
-        {
-            int categoryId = 0;
-            string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                await connection.OpenAsync();
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = $"SELECT * FROM temp WHERE id = '{id}'";
-                SqlDataReader reader = await command.ExecuteReaderAsync();
-                while (reader.Read())
-                {
-                    // link = reader["link"].ToString();
-                    if (reader["id"].ToString() == id.ToString())
-                    {
-                        categoryId = Convert.ToInt32(reader["categoryId"]);
-                        Console.WriteLine($"We have found that id = {id}, is key to categoryID = {categoryId}");
-                    }
-                    else
-                        Console.WriteLine($"ERROR!!! We didn't found value to key {id}");
-                }
-                connection.Close();
-            }
-            return categoryId;
+            return answer;
         }
     }
 }

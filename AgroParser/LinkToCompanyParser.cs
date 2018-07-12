@@ -32,6 +32,7 @@ namespace AgroParser
         private static async Task PutToDataBase(string compLink, int idCategory)
         {
             string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
+            bool check = false;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 // Открываем асинхронно коннект с БД
@@ -47,12 +48,14 @@ namespace AgroParser
                 while (reader.Read())
                 {
                     if (reader["link"].ToString() == compLink)
-                        Console.WriteLine($"Success! Link {compLink} was inserted in database");
-                    else
-                        Console.WriteLine($"Error! Link {compLink} was not inserted in database");
+                        check = true;
                 }
                 connection.Close();
             }
+            if (check)
+                Console.WriteLine($"Success! Link {compLink} was inserted in database");
+            else
+                Console.WriteLine($"Error! Link {compLink} was not inserted in database");
         }
     }
 }

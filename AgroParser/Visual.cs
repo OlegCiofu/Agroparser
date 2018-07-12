@@ -32,6 +32,7 @@ namespace AgroParser
             OnNewData += Parser_WhenNewData;
             OnCompleted += Parser_WhenCompleted;
             DoubleBuffered = true;
+           
         }
 
         //public void AnimateImage()
@@ -122,8 +123,8 @@ namespace AgroParser
                     return;
                 }
                 string whatTable = "category";
-                string link = await database.GetLinkByKey(i, whatTable);
-                
+                (string link, int categoryId) = await database.GetLinkAndIdByKey(i, whatTable);
+
                 if (link == "0"|| link == "")
                 {
                     continue;
@@ -170,8 +171,9 @@ namespace AgroParser
                 {
                     return;
                 }
-                string link = await database.GetLinkByKey(i, whatTable);
-                int categoryId = await database.GetIdByKey(i);
+                (string link, int categoryId) = await database.GetLinkAndIdByKey(i, whatTable);
+               // string link = await database.GetLinkByKey(i, whatTable);
+               // int categoryId = await database.GetIdByKey(i);
                 loader = new HtmlLoader();
                 var source = await loader.GetSource(link);
                 var domParser = new HtmlParser();
@@ -208,6 +210,23 @@ namespace AgroParser
         {
             isActive = true;
             DetailCompWorker();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (var fs = new FileStream($"{Application.StartupPath}\\log.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var rs = new StreamReader(fs, Encoding.Default))
+            {
+                string log = rs.ReadToEnd();
+                if (log.Contains("Error"))
+                {
+
+                    int count = (log.Length - log.Replace("Error", "").Length) / 5;
+                    MessageBox.Show($"There is {count} Errors in log.txt", "AgroParser", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                    MessageBox.Show("There is no Errors in log.txt", "AgroParser", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

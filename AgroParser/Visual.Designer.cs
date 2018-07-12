@@ -41,12 +41,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // DbManipButton
             // 
             this.DbManipButton.AutoSize = true;
-            this.DbManipButton.Location = new System.Drawing.Point(23, 12);
+            this.DbManipButton.Location = new System.Drawing.Point(9, 12);
             this.DbManipButton.Name = "DbManipButton";
             this.DbManipButton.Size = new System.Drawing.Size(144, 13);
             this.DbManipButton.TabIndex = 0;
@@ -55,7 +56,7 @@
             // labelParse
             // 
             this.labelParse.AutoSize = true;
-            this.labelParse.Location = new System.Drawing.Point(282, 12);
+            this.labelParse.Location = new System.Drawing.Point(260, 12);
             this.labelParse.Name = "labelParse";
             this.labelParse.Size = new System.Drawing.Size(62, 13);
             this.labelParse.TabIndex = 1;
@@ -72,9 +73,9 @@
             // 
             // CreateDBButton
             // 
-            this.CreateDBButton.Location = new System.Drawing.Point(26, 37);
+            this.CreateDBButton.Location = new System.Drawing.Point(12, 37);
             this.CreateDBButton.Name = "CreateDBButton";
-            this.CreateDBButton.Size = new System.Drawing.Size(141, 41);
+            this.CreateDBButton.Size = new System.Drawing.Size(123, 41);
             this.CreateDBButton.TabIndex = 3;
             this.CreateDBButton.Text = "Create DataBase";
             this.CreateDBButton.UseVisualStyleBackColor = true;
@@ -82,9 +83,9 @@
             // 
             // clearDataButton
             // 
-            this.clearDataButton.Location = new System.Drawing.Point(26, 84);
+            this.clearDataButton.Location = new System.Drawing.Point(12, 84);
             this.clearDataButton.Name = "clearDataButton";
-            this.clearDataButton.Size = new System.Drawing.Size(141, 41);
+            this.clearDataButton.Size = new System.Drawing.Size(123, 41);
             this.clearDataButton.TabIndex = 4;
             this.clearDataButton.Text = "Erase All Data";
             this.clearDataButton.UseVisualStyleBackColor = true;
@@ -92,9 +93,9 @@
             // 
             // dropDbButton
             // 
-            this.dropDbButton.Location = new System.Drawing.Point(26, 131);
+            this.dropDbButton.Location = new System.Drawing.Point(12, 131);
             this.dropDbButton.Name = "dropDbButton";
-            this.dropDbButton.Size = new System.Drawing.Size(141, 41);
+            this.dropDbButton.Size = new System.Drawing.Size(123, 41);
             this.dropDbButton.TabIndex = 5;
             this.dropDbButton.Text = "Delete DataBase";
             this.dropDbButton.UseVisualStyleBackColor = true;
@@ -102,7 +103,7 @@
             // 
             // parseCategoriesButton
             // 
-            this.parseCategoriesButton.Location = new System.Drawing.Point(247, 37);
+            this.parseCategoriesButton.Location = new System.Drawing.Point(226, 37);
             this.parseCategoriesButton.Name = "parseCategoriesButton";
             this.parseCategoriesButton.Size = new System.Drawing.Size(141, 41);
             this.parseCategoriesButton.TabIndex = 6;
@@ -112,7 +113,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(247, 84);
+            this.button2.Location = new System.Drawing.Point(226, 84);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(141, 41);
             this.button2.TabIndex = 7;
@@ -122,7 +123,7 @@
             // 
             // ParseCompanyesButton
             // 
-            this.ParseCompanyesButton.Location = new System.Drawing.Point(247, 131);
+            this.ParseCompanyesButton.Location = new System.Drawing.Point(226, 131);
             this.ParseCompanyesButton.Name = "ParseCompanyesButton";
             this.ParseCompanyesButton.Size = new System.Drawing.Size(141, 41);
             this.ParseCompanyesButton.TabIndex = 8;
@@ -133,9 +134,9 @@
             // abortButton
             // 
             this.abortButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.abortButton.Location = new System.Drawing.Point(247, 178);
+            this.abortButton.Location = new System.Drawing.Point(183, 178);
             this.abortButton.Name = "abortButton";
-            this.abortButton.Size = new System.Drawing.Size(141, 41);
+            this.abortButton.Size = new System.Drawing.Size(106, 41);
             this.abortButton.TabIndex = 9;
             this.abortButton.Text = "STOP!";
             this.abortButton.UseVisualStyleBackColor = true;
@@ -145,7 +146,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(214, 49);
+            this.label1.Location = new System.Drawing.Point(193, 49);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 15);
             this.label1.TabIndex = 10;
@@ -155,7 +156,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(214, 96);
+            this.label2.Location = new System.Drawing.Point(193, 96);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 15);
             this.label2.TabIndex = 11;
@@ -165,17 +166,28 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(214, 143);
+            this.label3.Location = new System.Drawing.Point(193, 143);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 15);
             this.label3.TabIndex = 12;
             this.label3.Text = "3-->";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(305, 178);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(106, 41);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "Check Log for Errors";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Visual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1288, 486);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -211,5 +223,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button1;
     }
 }
