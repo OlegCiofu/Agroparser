@@ -48,6 +48,8 @@
             this.progresLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timeElapsedLabel = new System.Windows.Forms.Label();
+            this.timeLeftLabel = new System.Windows.Forms.Label();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // DbManipButton
@@ -192,7 +194,7 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(515, 451);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(411, 23);
+            this.progressBar1.Size = new System.Drawing.Size(629, 23);
             this.progressBar1.TabIndex = 14;
             // 
             // progressTextLabel
@@ -210,26 +212,44 @@
             this.progresLabel.AutoSize = true;
             this.progresLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.progresLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.progresLabel.Location = new System.Drawing.Point(691, 453);
+            this.progresLabel.Location = new System.Drawing.Point(810, 455);
             this.progresLabel.Name = "progresLabel";
             this.progresLabel.Size = new System.Drawing.Size(59, 15);
             this.progresLabel.TabIndex = 16;
             this.progresLabel.Text = "Progress:";
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            // 
             // timeElapsedLabel
             // 
             this.timeElapsedLabel.AutoSize = true;
-            this.timeElapsedLabel.Location = new System.Drawing.Point(956, 455);
+            this.timeElapsedLabel.Location = new System.Drawing.Point(1161, 445);
             this.timeElapsedLabel.Name = "timeElapsedLabel";
             this.timeElapsedLabel.Size = new System.Drawing.Size(35, 13);
             this.timeElapsedLabel.TabIndex = 17;
             this.timeElapsedLabel.Text = "label4";
+            // 
+            // timeLeftLabel
+            // 
+            this.timeLeftLabel.AutoSize = true;
+            this.timeLeftLabel.Location = new System.Drawing.Point(1161, 464);
+            this.timeLeftLabel.Name = "timeLeftLabel";
+            this.timeLeftLabel.Size = new System.Drawing.Size(35, 13);
+            this.timeLeftLabel.TabIndex = 18;
+            this.timeLeftLabel.Text = "label4";
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 1000;
             // 
             // Visual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1288, 486);
+            this.Controls.Add(this.timeLeftLabel);
             this.Controls.Add(this.timeElapsedLabel);
             this.Controls.Add(this.progresLabel);
             this.Controls.Add(this.progressTextLabel);
@@ -276,5 +296,7 @@
         private System.Windows.Forms.Label progresLabel;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label timeElapsedLabel;
+        private System.Windows.Forms.Label timeLeftLabel;
+        private System.Windows.Forms.Timer timer2;
     }
 }

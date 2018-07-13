@@ -24,7 +24,11 @@ namespace AgroParser
         
         public event Action<object> OnCompleted;
         Bitmap animatedImage = new Bitmap($"{System.Windows.Forms.Application.StartupPath}\\giphy.gif");
-        
+        int counter;
+        double timeLeft;
+        double percent;
+
+
 
         public Visual()
         {
@@ -34,8 +38,11 @@ namespace AgroParser
             DoubleBuffered = true;
             progressBar1.Visible = false;
             progressTextLabel.Visible = false;
-            
-           
+            timeElapsedLabel.Visible = false;
+            timeLeftLabel.Visible = false;
+            progresLabel.Visible = false;
+
+
         }
 
         public void AnimateImage()
@@ -119,6 +126,7 @@ namespace AgroParser
             LinkToCompanyParser parser = new LinkToCompanyParser();
             loader = new HtmlLoader();
             int curentValueProgress = 0;
+            
             for (int i = 1; i <= max; i++)
             {
                 if (!isActive)
@@ -149,7 +157,7 @@ namespace AgroParser
                         progressBar1.Refresh();
                         progressBar1.Maximum = max * 100;
                         progressBar1.Value = curentValueProgress;
-                        double percent = (double)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
+                        percent = (double)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
                         percent = Math.Round(percent, 2);
                         progresLabel.Text = $"{percent.ToString()} %";
                         if (!isActive)
@@ -185,12 +193,12 @@ namespace AgroParser
                 progressBar1.Refresh();
                 progressBar1.Maximum = maxKey-8;
                 progressBar1.Value = i-8;
-                double percent = (double)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
+                percent = (double)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
                 percent = Math.Round(percent, 2);
                 progresLabel.Text = $"{percent.ToString()} %";
+                timeLeft = (counter * 100) / percent;
 
 
-                //timeElapsedLabel.Text = $"Time Elasped: {timer1.Tick()}";
                 if (!isActive)
                 {
                     return;
@@ -234,23 +242,25 @@ namespace AgroParser
         private void abortButton_Click(object sender, EventArgs e)
         {
             isActive = false;
+            finishTimeElapse();
             Message("Parsing aborted!");
             progressBar1.Value = 0;
             progressBar1.Visible = false;
             progressTextLabel.Visible = false;
             progresLabel.Visible = false;
+            
         }
 
         private void ParseCompanyesButton_Click(object sender, EventArgs e)
         {
             isActive = true;
+            initTimeElapse();
             progressBar1.Value = 0;
-            timer1.Start();
             progressBar1.Visible = true;
             progressTextLabel.Visible = true;
             progresLabel.Visible = true;
             DetailCompWorker();
-            timer1.Stop();
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -269,5 +279,53 @@ namespace AgroParser
                     MessageBox.Show("There is no Errors in log.txt", "AgroParser", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
+        public void initTimeElapse()
+        {
+            timeElapsedLabel.Text = $"Time elapsed: 00:00:00";
+            timeLeftLabel.Text = $"Time remains: 00:00:00";
+            timeElapsedLabel.Visible = true;
+            timeLeftLabel.Visible = true;
+            timer1.Start();
+            timer1.Tick += new EventHandler(timerTick);
+            counter = 0;
+        }
+
+
+
+
+
+        public void finishTimeElapse()
+        {
+            if (timer1.Enabled==true)
+                timer1.Stop();
+            timer1.Enabled = false;
+            timeElapsedLabel.Visible = false;
+            timeLeftLabel.Visible = false;
+
+        }
+
+        private void timerTick(Object myObject, EventArgs myEventArgs)
+        {
+            counter++;
+            int seconds = counter-counter/60*60;
+            int minutes = counter/60 - (counter/60)/60*60;
+            int hours = counter/(60*60);
+            timeElapsedLabel.Text = $"Time elapsed: {hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
+
+            timeLeft--;
+            if (timeLeft >= 1)
+            {
+                int secondsLeft = Convert.ToInt32((int)timeLeft - (int)timeLeft / 60 * 60);
+                int minutesLeft = Convert.ToInt32((int)timeLeft / 60 - ((int)timeLeft / 60) / 60 * 60);
+                int hoursLeft = Convert.ToInt32((int)timeLeft / (60 * 60));
+                timeLeftLabel.Text = $"Time remains: {hoursLeft.ToString("00")}:{minutesLeft.ToString("00")}:{secondsLeft.ToString("00")}";
+            }
+
+
+
+
+        }
+
     }
 }
