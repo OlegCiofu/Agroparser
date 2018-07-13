@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.DbManipButton = new System.Windows.Forms.Label();
             this.labelParse = new System.Windows.Forms.Label();
             this.ListBox = new System.Windows.Forms.ListBox();
@@ -42,6 +43,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.progressTextLabel = new System.Windows.Forms.Label();
+            this.progresLabel = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timeElapsedLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // DbManipButton
@@ -68,7 +74,7 @@
             this.ListBox.HorizontalScrollbar = true;
             this.ListBox.Location = new System.Drawing.Point(434, 12);
             this.ListBox.Name = "ListBox";
-            this.ListBox.Size = new System.Drawing.Size(842, 459);
+            this.ListBox.Size = new System.Drawing.Size(842, 420);
             this.ListBox.TabIndex = 2;
             // 
             // CreateDBButton
@@ -182,11 +188,52 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(515, 451);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(411, 23);
+            this.progressBar1.TabIndex = 14;
+            // 
+            // progressTextLabel
+            // 
+            this.progressTextLabel.AutoSize = true;
+            this.progressTextLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progressTextLabel.Location = new System.Drawing.Point(440, 453);
+            this.progressTextLabel.Name = "progressTextLabel";
+            this.progressTextLabel.Size = new System.Drawing.Size(69, 17);
+            this.progressTextLabel.TabIndex = 15;
+            this.progressTextLabel.Text = "Progress:";
+            // 
+            // progresLabel
+            // 
+            this.progresLabel.AutoSize = true;
+            this.progresLabel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.progresLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progresLabel.Location = new System.Drawing.Point(691, 453);
+            this.progresLabel.Name = "progresLabel";
+            this.progresLabel.Size = new System.Drawing.Size(59, 15);
+            this.progresLabel.TabIndex = 16;
+            this.progresLabel.Text = "Progress:";
+            // 
+            // timeElapsedLabel
+            // 
+            this.timeElapsedLabel.AutoSize = true;
+            this.timeElapsedLabel.Location = new System.Drawing.Point(956, 455);
+            this.timeElapsedLabel.Name = "timeElapsedLabel";
+            this.timeElapsedLabel.Size = new System.Drawing.Size(35, 13);
+            this.timeElapsedLabel.TabIndex = 17;
+            this.timeElapsedLabel.Text = "label4";
+            // 
             // Visual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1288, 486);
+            this.Controls.Add(this.timeElapsedLabel);
+            this.Controls.Add(this.progresLabel);
+            this.Controls.Add(this.progressTextLabel);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -224,5 +271,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label progressTextLabel;
+        private System.Windows.Forms.Label progresLabel;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label timeElapsedLabel;
     }
 }

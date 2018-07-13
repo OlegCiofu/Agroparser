@@ -32,6 +32,9 @@ namespace AgroParser
             OnNewData += Parser_WhenNewData;
             OnCompleted += Parser_WhenCompleted;
             DoubleBuffered = true;
+            progressBar1.Visible = false;
+            progressTextLabel.Visible = false;
+            
            
         }
 
@@ -115,7 +118,7 @@ namespace AgroParser
             int max = await database.GetMaxCountDB("category");
             LinkToCompanyParser parser = new LinkToCompanyParser();
             loader = new HtmlLoader();
-            
+            int curentValueProgress = 0;
             for (int i = 1; i <= max; i++)
             {
                 if (!isActive)
@@ -131,6 +134,7 @@ namespace AgroParser
                 }
                 else
                 {
+
                     var source = await loader.GetSource(link);
                     Console.WriteLine($"Рубрика {i}, страница 1");
                     var domParser = new HtmlParser();
@@ -138,8 +142,16 @@ namespace AgroParser
                     var result = await parser.Parse(document, i);
                     OnNewData?.Invoke(this, result);
                     Console.WriteLine("Цикл базовго урл завершен");
-                    for (int j = 2; j < 100; j++)
+
+                    for (int j = 2; j <= 100; j++)
                     {
+                        curentValueProgress++;
+                        progressBar1.Refresh();
+                        progressBar1.Maximum = max * 100;
+                        progressBar1.Value = curentValueProgress;
+                        double percent = (double)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
+                        percent = Math.Round(percent, 2);
+                        progresLabel.Text = $"{percent.ToString()} %";
                         if (!isActive)
                         {
                             return;
@@ -157,6 +169,9 @@ namespace AgroParser
             }
             OnCompleted?.Invoke(this);
             isActive = false;
+            progressBar1.Visible = false;
+            progressTextLabel.Visible = false;
+            progresLabel.Visible = false;
         }
         
         private async void DetailCompWorker()
@@ -167,6 +182,15 @@ namespace AgroParser
             int maxKey = await database.GetMaxCountDB(whatTable);
             for (int i = 8; i < maxKey; i++)
             {
+                progressBar1.Refresh();
+                progressBar1.Maximum = maxKey-8;
+                progressBar1.Value = i-8;
+                double percent = (double)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
+                percent = Math.Round(percent, 2);
+                progresLabel.Text = $"{percent.ToString()} %";
+
+
+                //timeElapsedLabel.Text = $"Time Elasped: {timer1.Tick()}";
                 if (!isActive)
                 {
                     return;
@@ -185,6 +209,9 @@ namespace AgroParser
             }
             OnCompleted?.Invoke(this);
             isActive = false;
+            progressBar1.Visible = false;
+            progressTextLabel.Visible = false;
+            progresLabel.Visible = false;
         }
         
         private  void parseCategoriesButton_Click(object sender, EventArgs e)
@@ -197,6 +224,10 @@ namespace AgroParser
         private void button2_Click(object sender, EventArgs e)
         {
             isActive = true;
+            progressBar1.Value = 0;
+            progressBar1.Visible = true;
+            progressTextLabel.Visible = true;
+            progresLabel.Visible = true;
             MainCompWorker();
         }
 
@@ -204,12 +235,22 @@ namespace AgroParser
         {
             isActive = false;
             Message("Parsing aborted!");
+            progressBar1.Value = 0;
+            progressBar1.Visible = false;
+            progressTextLabel.Visible = false;
+            progresLabel.Visible = false;
         }
 
         private void ParseCompanyesButton_Click(object sender, EventArgs e)
         {
             isActive = true;
+            progressBar1.Value = 0;
+            timer1.Start();
+            progressBar1.Visible = true;
+            progressTextLabel.Visible = true;
+            progresLabel.Visible = true;
             DetailCompWorker();
+            timer1.Stop();
         }
 
         private void button1_Click(object sender, EventArgs e)
