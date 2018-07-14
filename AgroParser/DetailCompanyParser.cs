@@ -26,8 +26,10 @@ namespace AgroParser
                 string findBy = "Тел."; //ключевое слово, чтобы вычислить кол-во отделов
                 int countContacts = (allhtml.Length - allhtml.Replace(findBy, "").Length) / findBy.Length;// Количество отделов для итерации
                 string companyName = await ParseName(allhtml);  //Имя компании 
+                companyName = companyName.Replace("'", "ь");
                 int categoryID = categoryId;
                 string address = await ParseAdress(allhtml); //Адрес компании
+                address = address.Replace("'", "ь");
                 string region = address.Remove(0, (address.IndexOf(',') + 1));//address.Replace("Украина , ", "");
                 region = region.Substring(0, region.IndexOf(',')); //Вытаскиваем регион
                 int companyId = await PutCompToDb(categoryID, companyName, region, address); //асинхронно отправляем вытащенное название рубрики в БД и сразу вытаскиваем id 
@@ -47,7 +49,9 @@ namespace AgroParser
                 for (int i = 1; i <= countFags; i++)
                 {
                     string mainPersonWithPhone = mainPersonAll;
-
+                    mainPersonWithPhone = mainPersonWithPhone.Trim(new Char[] { '\t', '\n'});
+                    if (mainPersonWithPhone == "")
+                        break;
                     for (int j = 1; j < i; j++)
                         mainPersonWithPhone = mainPersonWithPhone.Remove(0, (mainPersonWithPhone.IndexOf(';') + 1));
 
@@ -58,6 +62,9 @@ namespace AgroParser
                     {
                         mainPerson = mainPersonWithPhone.Substring(0, mainPersonWithPhone.IndexOf('-'));
                         mainPerson = mainPerson.Trim(new Char[] { ' ', '-' }); //финальное имя персоны основноего блока
+                        mainPerson = mainPerson.Replace("'", "ь");
+                        //mainPerson = mainPerson.Replace(",", " ");
+                        //mainPerson = mainPerson.Replace(".", "");
                         mainPhone = mainPersonWithPhone.Substring(mainPersonWithPhone.IndexOf("- "));
                     }
                     else
@@ -244,7 +251,7 @@ namespace AgroParser
             foreach (var item in items)
             {
                 answer = item.TextContent;
-                answer = answer.Replace("Факс.: ", "");
+                answer = answer.Replace("Факс: ", "");
                 answer = answer.Replace("(", "");
                 answer = answer.Replace(")", "");
                 answer = answer.Replace("+", "");

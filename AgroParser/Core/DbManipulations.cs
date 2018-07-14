@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AgroParser.Core
 {
@@ -40,7 +43,7 @@ namespace AgroParser.Core
                 "(id INT PRIMARY KEY IDENTITY, " +
                 "companyId INT, " +
                 "contactType NVARCHAR(40), " +
-                "personName NVARCHAR(50), " +
+                "personName NVARCHAR(100), " +
                 "personPost NVARCHAR(100), " +
                 "FOREIGN KEY(companyId) REFERENCES company(id) ON DELETE CASCADE); " +
 
@@ -86,7 +89,7 @@ namespace AgroParser.Core
         public void DropDB()
         {
             string command = dropDataBaseCommand;
-            string message = "DataBase is Deleted Successfully";
+            string message = "DataBase and Log is Deleted Successfully";
             DoWithDatabase(command, message);
         }
 
@@ -166,6 +169,29 @@ namespace AgroParser.Core
                     Console.WriteLine($"id: {id} is a key to main category with no link. All is Ok, doing next step");
                 else
                     Console.WriteLine($"Success! We have found that id: {id}, is key to link: {answer.link} and key to categoryID = {answer.categoryId}");
+            }
+            return answer;
+        }
+
+        public async Task<(int companyes, int phones, int faxes, int emails)> GetParsedData()
+        {
+            var answer = (companyes: 0, phones: 0, faxes: 0, emails: 0);
+
+            string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand();
+                command.Connection = connection;
+                command.CommandText = $"SELECT COUNT(id) FROM company";
+                answer.companyes = Convert.ToInt32(command.ExecuteScalar());
+                command.CommandText = $"SELECT COUNT(phone) FROM phone WHERE phone <> '0'";
+                answer.phones = Convert.ToInt32(command.ExecuteScalar());
+                command.CommandText = $"SELECT COUNT(fax) FROM phone WHERE fax <> '0'";
+                answer.faxes = Convert.ToInt32(command.ExecuteScalar());
+                command.CommandText = $"SELECT COUNT(email) FROM phone WHERE email <> '0'";
+                answer.emails = Convert.ToInt32(command.ExecuteScalar());
+                connection.Close();
             }
             return answer;
         }
