@@ -42,27 +42,27 @@ namespace AgroParser
             // progresLabel.Visible = false;
         }
 
-        //public void AnimateImage()
-        //{
-        //    if (!isActive)
-        //    {
-        //        ImageAnimator.Animate(animatedImage, new EventHandler(OnFramesChanged));
-        //    }
-        //}
-        //protected override void OnPaint(PaintEventArgs e)
-        //{
-        //    //Begin the animation.
-        //    AnimateImage();
-        //    //Get the next frame ready for rendering.
-        //    ImageAnimator.UpdateFrames();
-        //    //Draw the next frame in the animation.
-        //    e.Graphics.DrawImage(animatedImage, 27, 191, 382, 283);
-        //}
+        public void AnimateImage()
+        {
+            if (!isActive)
+            {
+                ImageAnimator.Animate(animatedImage, new EventHandler(OnFramesChanged));
+            }
+        }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            //Begin the animation.
+            AnimateImage();
+            //Get the next frame ready for rendering.
+            ImageAnimator.UpdateFrames();
+            //Draw the next frame in the animation.
+            e.Graphics.DrawImage(animatedImage, 27, 191, 382, 283);
+        }
 
-        //private void OnFramesChanged(object sender, EventArgs e)
-        //{
-        //    Invalidate();
-        //}
+        private void OnFramesChanged(object sender, EventArgs e)
+        {
+            Invalidate();
+        }
 
         public void Message(string info)
         {
