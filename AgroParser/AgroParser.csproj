@@ -67,11 +67,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CategoryParser.cs" />
+    <Compile Include="Core\DbChecker.cs" />
+    <Compile Include="Core\DbWorker.cs" />
+    <Compile Include="ParserWorkers\CategoryParser.cs" />
     <Compile Include="Core\DbManipulations.cs" />
-    <Compile Include="DetailCompanyParser.cs" />
+    <Compile Include="ParserWorkers\DetailCompanyParser.cs" />
     <Compile Include="HtmlLoader.cs" />
-    <Compile Include="LinkToCompanyParser.cs" />
+    <Compile Include="ParserWorkers\LinkToCompanyParser.cs" />
+    <Compile Include="ParserWorkers\Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -79,7 +82,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SubCategoryParser.cs" />
+    <Compile Include="ParserWorkers\SubCategoryParser.cs" />
     <Compile Include="Visual.cs">
       <SubType>Form</SubType>
     </Compile>

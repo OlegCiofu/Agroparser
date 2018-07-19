@@ -17,11 +17,11 @@ namespace AgroParser.Core
         private string createDBcommand = "CREATE DATABASE parserDB ON PRIMARY " +
                 "(NAME = parserDB, " +
                 $"FILENAME = '{System.Windows.Forms.Application.StartupPath}\\Database.mdf', " + //C:\\Agroparser\\
-                "SIZE = 2MB, MAXSIZE = 10MB, FILEGROWTH = 10%) " +
+                "SIZE = 2MB, MAXSIZE = 20MB, FILEGROWTH = 10%) " +
                 "LOG ON (NAME = Database_Log, " +
                 $"FILENAME = '{System.Windows.Forms.Application.StartupPath}\\Database.ldf', " + //C:\\Agroparser\\
                 "SIZE = 1MB, " +
-                "MAXSIZE = 5MB, " +
+                "MAXSIZE = 20MB, " +
                 "FILEGROWTH = 10%)";
 
         private string createDBTables = "USE parserDB;" +
@@ -44,7 +44,7 @@ namespace AgroParser.Core
                 "companyId INT, " +
                 "contactType NVARCHAR(40), " +
                 "personName NVARCHAR(100), " +
-                "personPost NVARCHAR(100), " +
+                "personPost NVARCHAR(200), " +
                 "FOREIGN KEY(companyId) REFERENCES company(id) ON DELETE CASCADE); " +
 
                 "CREATE TABLE phone " +
@@ -55,10 +55,17 @@ namespace AgroParser.Core
                 "email NVARCHAR(50), " +
                 "FOREIGN KEY(contactId) REFERENCES contact(id) ON DELETE CASCADE); " +
 
+                "CREATE TABLE work " +
+                "(id INT PRIMARY KEY IDENTITY, " +
+                "processName NVARCHAR(60), " +
+                "processValue INT, " +
+                "processFlag BIT); " +
+
                 "CREATE TABLE temp " +
                 "(id INT PRIMARY KEY IDENTITY, " +
                 "link NVARCHAR (150)," +
-                "categoryId INT)";
+                "categoryId INT," +
+                "isParsed BIT);";
 
         private string deleteDataCommand = "DELETE FROM category;" +
                                            "DELETE FROM company;" +
@@ -121,79 +128,10 @@ namespace AgroParser.Core
 
         #endregion
 
-        public async Task<int> GetMaxCountDB(string table)
-        {
-            int count = 0;
-            string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                await connection.OpenAsync();
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = $"SELECT MAX(id) FROM {table}";
-                count = Convert.ToInt32(command.ExecuteScalar());
-                Console.WriteLine($"Max count from table {table} in row id = {count}");
-                connection.Close();
-            }
-            return count;
-        }
+        
 
-        public async Task<(string link, int categoryId)> GetLinkAndIdByKey(int id, string sourceTable)
-        {
-            var answer = (link: "0", categoryId: 0);
-            
-            string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                await connection.OpenAsync();
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = $"SELECT * FROM {sourceTable} WHERE id = '{id}'";
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    if (reader["id"].ToString() == id.ToString())
-                    {
-                        answer.link = reader["link"].ToString();
-                        try
-                        {
-                            answer.categoryId = Convert.ToInt32(reader["categoryId"]);
-                        }
-                        catch {}
-                    }
-                }
-                connection.Close();
-                if (answer.link == "" || answer.link == null)
-                    Console.WriteLine($"Error!!! We didn't found value to key {id}");
-                else if (answer.link == "0")
-                    Console.WriteLine($"id: {id} is a key to main category with no link. All is Ok, doing next step");
-                else
-                    Console.WriteLine($"Success! We have found that id: {id}, is key to link: {answer.link} and key to categoryID = {answer.categoryId}");
-            }
-            return answer;
-        }
+        
 
-        public async Task<(int companyes, int phones, int faxes, int emails)> GetParsedData()
-        {
-            var answer = (companyes: 0, phones: 0, faxes: 0, emails: 0);
-
-            string connectionString = @"Data Source=.;Initial Catalog=parserDB;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                await connection.OpenAsync();
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = $"SELECT COUNT(id) FROM company";
-                answer.companyes = Convert.ToInt32(command.ExecuteScalar());
-                command.CommandText = $"SELECT COUNT(phone) FROM phone WHERE phone <> '0'";
-                answer.phones = Convert.ToInt32(command.ExecuteScalar());
-                command.CommandText = $"SELECT COUNT(fax) FROM phone WHERE fax <> '0'";
-                answer.faxes = Convert.ToInt32(command.ExecuteScalar());
-                command.CommandText = $"SELECT COUNT(email) FROM phone WHERE email <> '0'";
-                answer.emails = Convert.ToInt32(command.ExecuteScalar());
-                connection.Close();
-            }
-            return answer;
-        }
+        
     }
 }
